@@ -19,8 +19,8 @@ static uint8_t stack0[128];
 static uint8_t stack1[400];
 static uint8_t stack2[128];
 
-static FATFS FatFs;		/* FatFs work area needed for each volume */
-static FIL Fil;			/* File object needed for each open file */
+static FATFS fatFs;		/* FatFs work area needed for each volume */
+static FIL file;			/* File object needed for each open file */
 
 volatile static uint32_t speed = 200;
 
@@ -46,12 +46,12 @@ static void taskFn1() {
 	volatile FRESULT fr;
 
 
-	f_mount(&FatFs, "", 0);		/* Give a work area to the default drive */
+	f_mount(&fatFs, "", 0);		/* Give a work area to the default drive */
 
-	fr = f_open(&Fil, "newfile3.txt", FA_WRITE | FA_CREATE_ALWAYS);	/* Create a file */
+	fr = f_open(&file, "newfile3.txt", FA_WRITE | FA_CREATE_ALWAYS);	/* Create a file */
 	if (fr == FR_OK) {
-		f_write(&Fil, "It works :)!\r\n", 11, &bw);	/* Write data to the file */
-		fr = f_close(&Fil);							/* Close the file */
+		f_write(&file, "It works :)!\r\n", 11, &bw);	/* Write data to the file */
+		fr = f_close(&file);							/* Close the file */
 		if (fr == FR_OK && bw == 11) {		/* Lights green LED if data written well */
 			speed = 25;
 		}
